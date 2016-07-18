@@ -1,0 +1,881 @@
+
+\documentclass[a4paper, 10pt, twoside]{article}
+
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, es-ucroman, es-noquoting]{babel}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{amsmath}
+\usepackage{bera}% optional: just to have a nice mono-spaced font
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{enumitem} % Provee macro \setlist
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{xspace}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\usepackage{ulem} % Provee macro \uwave
+\usepackage[toc, page]{appendix}
+
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+
+
+%%%%%%%%%% Constantes - Inicio %%%%%%%%%%
+\newcommand{\titulo}{Trabajo Práctico 2}
+\newcommand{\materia}{Bases de Datos}
+\newcommand{\integrantes}{Hosen · Marto Caravario · Rajgnewerc · Russo}
+\newcommand{\cuatrimestre}{Primer Cuatrimestre de 2016}
+%%%%%%%%%% Constantes - Fin %%%%%%%%%%
+
+
+%%%%%%%%%% Configuración de Fancyhdr - Inicio %%%%%%%%%%
+\pagestyle{fancy}
+\thispagestyle{fancy}
+\lhead{\titulo · \materia}
+\rhead{\integrantes}
+\renewcommand{\footrulewidth}{0.4pt}
+\cfoot{\thepage /\pageref{LastPage}}
+
+\fancypagestyle{caratula} {
+   \fancyhf{}
+   \cfoot{\thepage /\pageref{LastPage}}
+   \renewcommand{\headrulewidth}{0pt}
+   \renewcommand{\footrulewidth}{0pt}
+}
+%%%%%%%%%% Configuración de Fancyhdr - Fin %%%%%%%%%%
+
+
+%%%%%%%%%% Miscelánea - Inicio %%%%%%%%%%
+% Evita que el documento se estire verticalmente para ocupar el espacio vacío
+% en cada página.
+\raggedbottom
+
+% Separación entre párrafos.
+\setlength{\parskip}{0.5em}
+
+% Separación entre elementos de listas.
+\setlist{itemsep=0.5em}
+
+% Asigna la traducción de la palabra 'Appendices'.
+\renewcommand{\appendixtocname}{Apéndices}
+\renewcommand{\appendixpagename}{Apéndices}
+%%%%%%%%%% Miscelánea - Fin %%%%%%%%%%
+
+
+%%%%%%%%%% Macros para el modelo relacional - Inicio %%%%%%%%%%
+\newcommand{\relacion}[3]{
+  \noindent
+  \textbf{#1}(\ignorespaces#2\unskip) \\
+  #3
+  \vspace{0.5em}
+}
+\newcommand{\pk}[1]{%
+  \underline{#1}%
+}
+\newcommand{\fk}[1]{%
+  \uwave{#1}%
+}
+\newcommand{\pkfk}[1]{%
+  \pk{\fk{#1}}%
+}
+\newcommand{\clavespkck}[1]{
+  PK = CK = \{#1\}
+}
+\newcommand{\clavespkckfk}[1]{
+  PK = CK = FK = \{#1\}
+}
+\newcommand{\clavesfk}[1]{
+  FK = \{#1\}
+}
+%%%%%%%%%% Macros para el modelo relacional - Fin %%%%%%%%%%
+
+
+
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{background},
+    literate=
+     *{0}{{{\color{numb}0}}}{1}
+      {1}{{{\color{numb}1}}}{1}
+      {2}{{{\color{numb}2}}}{1}
+      {3}{{{\color{numb}3}}}{1}
+      {4}{{{\color{numb}4}}}{1}
+      {5}{{{\color{numb}5}}}{1}
+      {6}{{{\color{numb}6}}}{1}
+      {7}{{{\color{numb}7}}}{1}
+      {8}{{{\color{numb}8}}}{1}
+      {9}{{{\color{numb}9}}}{1}
+      {:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {[}{{{\color{delim}{[}}}}{1}
+      {]}{{{\color{delim}{]}}}}{1},
+}
+
+
+
+
+
+\begin{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Carátula                                                                  %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\thispagestyle{caratula}
+
+\begin{center}
+
+\includegraphics[height=2cm]{DC.png} 
+\hfill
+\includegraphics[height=2cm]{UBA.jpg} 
+
+\vspace{2cm}
+
+Departamento de Computación,\\
+Facultad de Ciencias Exactas y Naturales,\\
+Universidad de Buenos Aires
+
+\vspace{4cm}
+
+\begin{Huge}
+\titulo
+\end{Huge}
+
+\vspace{0.5cm}
+
+\begin{Large}
+\materia
+\end{Large}
+
+\vspace{1cm}
+
+\cuatrimestre
+
+\vspace{4cm}
+
+\begin{tabular}{|c|c|c|}
+\hline
+Apellido y Nombre & LU & E-mail\\
+\hline
+Federico Hosen  & 825/12 & federico.hosen@gmail.com\\
+Martin 'Marto' Caravario  & 470/12 & martin.caravario@gmail.com\\
+Guido Rajngewerc  & 379/12 & guido.raj@gmail.com\\
+Christian Russo  & 679/10 & christian.russo8@gmail.com\\
+\hline
+\end{tabular}
+
+\end{center}
+
+\newpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Introducción                                                              %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introducción}
+
+En el siguiente trabajo se desarrolla un modelo de Bases de Datos NoSQL con MongoDB teniendo en cuenta el problema descripto en el TP1.
+Para esto, se utiliz\'o una secci\'on del DER completo del TP1 y se diseñaron los documentos correspondientes para realizar las consultas pedidas en el enunciado del TP2.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Parte 1                                                                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Parte 1 - Diseño}
+
+\subsection{Diagrama Entidad relacion}
+
+\begin{figure}[h]
+\includegraphics[width=18cm]{der}
+\end{figure}
+
+Las consultas pedidas solamente necesitan de usuarios, ventas, reputaciones, calificaciones, comisiones y facturas. Por lo tanto usamos:
+
+\begin{itemize}
+\item Para usuarios y ventas, las tablas de Usuarios, Publicaciones y Compra
+\item Para reputaciones de usuarios, las tablas de Calificaci\'on y Usuario
+\item Para comisiones, usamos las tablas de Publicaci\'on y Tipo de Publicaci\'on.
+\item Para monto de facturas, usamos las tabla de Facturas
+\end{itemize}
+
+\newpage
+\subsection{Colecciones}
+
+A continuaci\'on, mostramos las colecciones que utilizamos para resolver las consultas propuestas en el enunciado
+
+\subsubsection{Publicaciones}
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  "Id": 65,
+  "TipoPublicacion": "Servicio"
+}
+\end{lstlisting}
+
+\subsubsection{Compra}
+
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  "idCompra": 656897,
+  "idUsuarioComprador": 65468,
+  "Fecha": "2-06-2014",
+  "Cantidad": 2,
+  "Publicacion": {
+    "idPublicacion": 2365,
+    "idUsuario": 123,
+    "Precio": 3655,
+    "PorcentajeVenta": 20 //entre 0 y 100
+  },
+  "CalificacionDelVendedor": 8,
+  "CalificacionDelComprador": 6
+}
+\end{lstlisting}
+
+
+\subsubsection{Factura}
+
+\begin{lstlisting}[language=json,firstnumber=1]
+{
+  "idFactura": 687468,
+  "IdUsuario": 654,
+  "Fecha": "16-9-2015",
+  "TotalAPagar": 5624,
+  "estoyPagando": [
+    {
+      "idPublicacion": 54,
+      "TipoSuscripcion": "Rubi"
+    },
+    {
+      "idPublicacion": 54,
+      "TipoSuscripcion": "Libre"
+     }
+  ]
+}
+\end{lstlisting}
+\newpage
+\subsection{Migraci\'on datos SQL a Colecciones}
+Para migrar los datos de SQL (MySQLWorkwench) al formato de JSON que se necesita en MongoDB lo que hicimos fue exportar los datos directo desde MySQLWorkwench, pero estos se exportan en JSON plano, es decir no quedaba formateado de la forma que nosotros queriamos. 
+
+Para solucionar este problema, realizamos unos algoritmos en python para formatearlos a mano. Estos algoritmos reciben como input el JSON plano y devuelven un JSON formateado para MongoDB
+
+\subsubsection{Parser para el JSON de la compra}
+
+\begin{verbatim}
+import json
+from pprint import pprint
+
+with open(raw_input()) as data_file:    
+    data = json.load(data_file)
+for a in data:
+  print "{"
+  print '"idCompra": ' , a['idCompra'], ","
+  print '"idUsuario": ', a['idUsuario'],","
+  print '"fecha": ', '"',a['fecha'],'"',","
+  print '"cantidad": ', a['cantidad'],","
+  print '"Publicacion": {'
+  print '"idPublicacion": ', a['idPublicacion'],","
+  print '"idUsuario": ', a['idUsuario'],","
+  print '"Precio": ', a['precio'],","
+  print '"PorcentajeVenta": ', a['porcentajeVenta']
+  print "}" ,","
+  print '"calificacionVendedor": ', a['CalificacionDelVendedor'], ','
+  print '"calificacionComprador": ', a['CalificacionDelComprador'], ''
+  print '}'
+
+\end{verbatim}
+
+\newpage
+\subsubsection{Parser para el JSON de la Factutra}
+
+\begin{verbatim}
+import json
+from pprint import pprint
+
+with open('factura_sql.json') as data_file:    
+    data = json.load(data_file)
+
+c = {}
+for a in data:
+  c.setdefault(a["idFactura"],[]).append(a)
+
+for a in c:
+  print '{'
+  print '"idFactura": ', c[a][0]['idFactura'], ","
+  print '"IdUsuario": ',c[a][0]['idUsuario'], ","
+  print '"Fecha": ', '"',c[a][0]['fecha'],'"', ","
+  total = 0
+  for x in c[a]:
+    total = total + c[a][c[a].index(x)]['totalAPagar']
+  print '"TotalAPagar": ',total, ","
+  print '"estoyPagando": ['
+  i = 1
+  for x in c[a]:
+    print "{"
+    print '"idPublicacion":', c[a][c[a].index(x)]['idPublicacion'], ","
+    print '"TipoSuscripcion":','"',c[a][c[a].index(x)]['nombre'], '"'
+    if i == len(c[a]):
+      print "}"
+    else:
+      print "},"
+    i = i+1
+  print ']'
+  print '}'
+
+\end{verbatim}
+
+\textbf{Nota:} para la colecci\'on de publicaciones no tuvimos que hacer ning\'un algoritmo.
+
+\newpage
+\subsection{Consultas SQL}
+
+A continuaci\'on listamos las consultas realizadas para conseguir los datos necesarios para nuestras colecciones:
+\subsubsection{SQL de Publicaciones}
+
+
+\begin{verbatim}
+select p.idPublicacion,   
+CASE
+  when s.idPublicacion is not null and 
+  (v.idPublicacion is not null or su.idPublicacion is not null) then "mixto"
+  when s.idPublicacion is not null then "servicio"
+    when v.idPublicacion is not null then "articulo"
+    when su.idPublicacion is not null then "articulo"
+END
+as TipoPublicacion
+from publicacion p
+left join servicio s on s.idPublicacion = p.idPublicacion
+left join venta v on v.idPublicacion = p.idPublicacion
+left join subasta su on su.idPublicacion = p.idPublicacion
+\end{verbatim}
+
+
+\subsubsection{SQL de Compras}
+
+\begin{verbatim}
+select c.idCompra, c.idUsuario as idUsarioComprador,p.idUsuario as idUsuarioVendedor,
+c.fecha, c.cantidad, c.idPublicacion, p.precio,
+tp.costo, tp.porcentajeVenta, tp.nombre, ca.puntaje
+from compra c 
+join publicacion p
+ 
+on c.idPublicacion = p.idPublicacion
+join tipo_de_publicacion tp
+on p.idTipoDePublicacion = tp.idTipoPublicacion
+join calificacion ca 
+on c.idCompra = ca.idCompra
+
+\end{verbatim}
+
+\subsubsection{SQL de Facturas}
+\begin{verbatim}
+select f.idFactura, p.idUsuario, f.fecha, f.totalAPagar, p.idPublicacion, tp.nombre
+
+from factura f
+
+inner join corresponde c
+on c.idFactura = f.idFactura
+
+inner join publicacion p
+on c.idPublicacion = p.idPublicacion
+
+inner join tipo_de_publicacion tp
+on tp.idTipoPublicacion = p.idTipoDePublicacion
+
+\end{verbatim}
+\newpage
+\subsection{Implementaci\'on MongoDB}
+Para implementar la base de datos de documentos en mongoDB utilizamos los JSON de las colecciones descriptos anteriormente y los importamos de la siguiente forma:
+
+\begin{verbatim}
+mongoimport --db tp2 --collection compras --drop --file ./compra_mongo.json 
+mongoimport --db tp2 --collection facturas --drop --file ./factura_mongo.json
+mongoimport --db tp2 --collection publicacion --drop --file ./publicacion_mongo.json
+\end{verbatim}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Parte 2                                                                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Parte 2 - Map Reduce}
+\subsection{Ejercicio 1}
+El importe total de ventas por usuario.
+
+
+\begin{lstlisting}
+var ej1_m = function(){ 
+  emit(this.Publicacion.idUsuario, this.Publicacion.Precio * this.cantidad) 
+}
+
+var ej1_r = function(k, vs){
+  return Array.sum(vs);
+}
+
+\end{lstlisting}
+
+
+\subsection{Ejercicio 2}
+La reputaci\'on hist\'orica de cada usuario seg\'un la calificaci\'on.
+
+\begin{lstlisting}
+var ej2_m = function(){
+  if(this.calificacionVendedor != null) emit(this.idUsuario, this.calificacionVendedor);
+  if(this.calificacionComprador != null) emit(this.Publicacion.idUsuario, this.calificacionComprador);
+}
+
+var ej2_r = function(k, vs){
+  return ( Array.sum(vs) / vs.length);
+}
+\end{lstlisting}
+
+\subsection{Ejercicio 3}
+Las operaciones con comisi\'on m\'as alta.
+
+\begin{lstlisting}
+var ej3_m = function(){
+  var getComision = function(compra){
+   var subs = compra.Publicacion;
+    return (subs.Precio * compra.cantidad) * (subs.PorcentajeVenta / 100);
+  };
+
+  emit("todos", {
+  'idCompra': this.idCompra,
+  'comision': getComision(this)});
+};
+
+var ej3_r = function(k, vs){
+  var max = Math.max(...vs.map(function(v){
+      return v.comision;
+  }));
+  return {"resultado": vs.filter(function(v){
+    return v.comision >= max;
+  }), "max": max};
+};
+
+\end{lstlisting}
+
+
+
+\subsection{Ejercicio 4}
+El monto total facturado por año.
+
+\begin{lstlisting}
+var ej4_m = function(){
+  var getAno = function(fecha){
+    return fecha.trim().substring(0,4);
+  }
+  emit(getAno(this.Fecha), this.TotalAPagar)  
+}
+
+var ej4_r = function(k, vs){
+  return Array.sum(vs);
+}
+
+\end{lstlisting}
+
+\subsection{Ejercicio 5}
+El monto total facturado por año de las operaciones pertenecientes a usuarios con suscripciones Rubi Oriente.
+
+\begin{lstlisting}
+var ej5_m1 = function(){
+
+  var esRuby = function(e, i, arr){
+    return e.TipoSuscripcion.trim() == "RubiDeOriente"
+  };
+  
+  var getAno = function(fecha){
+    return fecha.trim().substring(0,4);
+  }
+
+  emit(
+    { 
+      "ano": getAno(this.Fecha),
+      "usuario": this.IdUsuario
+    }, 
+    {
+      "totalAPagar": this.TotalAPagar,
+      "esRuby": this.estoyPagando.some(esRuby)
+    }); 
+};
+
+var ej5_r1 = function(k, vs){
+  if (vs.some(function(a){
+    return a.esRuby;  
+  }))
+  {
+    return Array.sum(vs.map(function(e){return e.totalAPagar}));  
+  }
+}
+
+
+var ej5_m2 = function(){
+  if (this.value.esRuby)
+  {
+    emit(this._id.ano, this.value.totalAPagar);
+  }
+}
+
+var ej5_r2 = function(k, vs){
+  return Array.sum(vs);
+}
+\end{lstlisting}
+
+
+\subsection{Ejercicio 6}
+El total de publicaciones por tipo de publicaci\'on (productos, servicios o mixtas).
+
+\begin{lstlisting}[caption=Ejercicio 6]
+var ej6_m = function(){
+  emit(this.TipoPublicacion, 1);
+}
+
+var ej6_r = function(k,vs){
+  return  vs.length;
+};
+\end{lstlisting}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Parte 3                                                                   %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Parte 3 - Sharding}
+\subsection{Introducci\'on}
+
+Utilizamos 5 shards para hacer las pruebas y a la colecci\'on de publicaciones le agregamos un atributo extra "idUsuarioVendedor" para poder usarlo como atributo clave a la hora de hacer experimentos de sharding.
+Cada 200000 insert hacemos un output en un archivo de 
+
+db.publicaciones.getShardDistribution() y sh.status() y con estos datos hicimos los gr\'aficos.
+
+
+\subsection{Inserci\'on de datos en la base de datos}
+Para insertar 500000 registros en la base de datos lo que hicimos fue generar un script en Python que nos devuelva 500000 publicaciones. 
+
+El pseudocodigo para la generaci\'on de los 500000 registros:
+\begin{verbatim}
+import json
+from pprint import pprint
+import random
+from random import randint
+
+
+foo = ['articulo', 'servicio', 'mixto']
+print 'var pubs = ['
+for x in range(1,500000):
+  print '{'
+  print '"idPublicacion":', x,","
+  print '"TipoPublicacion":', ",",random.choice(foo),","
+  print '"idUsuarioVendedor":',randint(0,8000)
+  print '},'
+print ']'
+
+\end{verbatim}
+
+
+A continuaci\'on, para insertar estos datos en la base de datos de mongo, hicimos un scrpit de JavaScript para correrlo desde el Shell de mongo y que pueda importar todos estos datos en los distintos shards
+
+
+\begin{lstlisting}[caption=Ejercicio 6]
+var collection = "publicaciones";
+
+pubs.forEach(function(e, i){
+    if (i % 20000 == 0){
+        db[collection].getShardDistribution();
+    }
+    db[collection].insert(e);
+});
+\end{lstlisting}
+
+
+\section{\'Indice Simple}
+
+\subsection{Creaci\'on de Shards}
+
+Para la creacion de los Shards con Indice Simple corrimos los siguientes scripts:
+
+Creamos los shards:
+
+\begin{verbatim}
+mkdir -p ./data/localhost10000
+mongod --rest --shardsvr --port 10000 --dbpath data/localhost10000 
+--logpath data/localhost10000/log
+
+mkdir -p ./data/localhost10001
+mongod --rest --shardsvr --port 10001 --dbpath data/localhost10001 
+--logpath data/localhost10001/log
+
+mkdir -p ./data/localhost10002
+mongod --rest --shardsvr --port 10002 --dbpath data/localhost10002 
+--logpath data/localhost10002/log
+
+mkdir -p ./data/localhost10003
+mongod --rest --shardsvr --port 10003 --dbpath data/localhost10003 
+--logpath data/localhost10003/log
+
+mkdir -p ./data/localhost10004
+mongod --rest --shardsvr --port 10004 --dbpath data/localhost10004 
+--logpath data/localhost10004/log
+
+\end{verbatim}
+
+
+Creamos el config server 
+
+\begin{verbatim}
+mkdir -p ./data/localhost10005
+mongod --rest --configsvr --port 10005 --dbpath data/localhost10005 
+--logpath data/localhost10005/log
+\end{verbatim}
+
+Creaamos routing service
+
+\begin{verbatim}
+    mongos --port 10006 --configdb localhost:10005 > run_routing_service_log
+\end{verbatim}
+
+
+Agregamos los shards
+
+\begin{verbatim}
+mongo localhost:10006
+use admin
+db.runCommand({addshard:"localhost:10000", name:"shard10000"});
+db.runCommand({addshard:"localhost:10001", name:"shard10001"});
+db.runCommand({addshard:"localhost:10002", name:"shard10002"});
+db.runCommand({addshard:"localhost:10003", name:"shard10003"});
+db.runCommand({addshard:"localhost:10004", name:"shard10004"});
+\end{verbatim}
+
+Configuramos los Shards:
+
+\begin{verbatim}
+use test_sharding
+sh.enableSharding("test_sharding")
+db.publicacion.ensureIndex({"idUsuarioVendedor": 1})
+\end{verbatim}
+
+\subsection{Evolucion de Shards}
+
+A continuaci\'on se muestra un cuadro donde se encuentran los datos obtenidos del an\'alisis de los Shards. Lo que hicimos fue ver el getShardDistribution() cada 20000 inserciones y mostrar el porcentaje de distrubuci\'on de los datos en los distintos Shards.
+Como ya fue explicado, utilizamos 5 Shards y en el cuadro se ve el porcentaje de datos que contiene cada Shard cada 20000 insert desde 0 hasta 500000 registros.
+Para este an\'alisis utilizamos \'indices simples sobre la columna "idUsuarioVendedor" del documento de Publicaciones.
+
+\begin{center}
+\includegraphics[scale=0.6]{tabla_indice.png}
+\end{center}
+\includegraphics[scale=0.4]{grafico_indice.png}
+
+\section{Indice Hash}
+
+\subsection{Creacion de Shards}
+
+Para la creacion de los Shards con Indice Hash corrimos los siguientes scripts:
+
+Creamos los shards:
+
+\begin{verbatim}
+mkdir -p ./data/localhost10000
+mongod --rest --shardsvr --port 10000 --dbpath data/localhost10000 
+--logpath data/localhost10000/log
+
+mkdir -p ./data/localhost10001
+mongod --rest --shardsvr --port 10001 --dbpath data/localhost10001 
+--logpath data/localhost10001/log
+
+mkdir -p ./data/localhost10002
+mongod --rest --shardsvr --port 10002 --dbpath data/localhost10002 
+--logpath data/localhost10002/log
+
+mkdir -p ./data/localhost10003
+mongod --rest --shardsvr --port 10003 --dbpath data/localhost10003 
+--logpath data/localhost10003/log
+
+mkdir -p ./data/localhost10004
+mongod --rest --shardsvr --port 10004 --dbpath data/localhost10004 
+--logpath data/localhost10004/log
+
+\end{verbatim}
+
+
+Creamos el config server 
+
+\begin{verbatim}
+mkdir -p ./data/localhost10005
+mongod --rest --configsvr --port 10005 --dbpath data/localhost10005 
+--logpath data/localhost10005/log
+\end{verbatim}
+
+Creaamos routing service
+
+\begin{verbatim}
+    mongos --port 10006 --configdb localhost:10005 > run_routing_service_log
+\end{verbatim}
+
+
+Agregamos los shards
+
+\begin{verbatim}
+mongo localhost:10006
+use admin
+db.runCommand({addshard:"localhost:10000", name:"shard10000"});
+db.runCommand({addshard:"localhost:10001", name:"shard10001"});
+db.runCommand({addshard:"localhost:10002", name:"shard10002"});
+db.runCommand({addshard:"localhost:10003", name:"shard10003"});
+db.runCommand({addshard:"localhost:10004", name:"shard10004"});
+\end{verbatim}
+
+Configuramos los Shards:
+
+\begin{verbatim}
+use test_sharding
+sh.enableSharding("test_sharding")
+db.publicacion.ensureIndex({"idUsuarioVendedor": "hashed"})
+\end{verbatim}
+
+\subsection{Evoluci\'on de Shards}
+
+A continuaci\'on se muestra un cuadro donde se encuentran los datos obtenidos del an\'alisis de los Shards. Lo que hicimos, fue ver el getShardDistribution() cada 20000 inserciones y mostrar el porcentaje de distrubuci\'on de los datos en los distintos Shards.
+Como ya fue explicado, utilizamos 5 Shards y en el cuadro se ve el porcentaje de datos que contiene cada Shard cada 20000 insert desde 0 hasta 500000 registros.
+Para este an\'alisis utilizamos \'indices hash sobre la columna "idUsuarioVendedor" del documento de Publicaciones.
+
+
+\begin{center}
+\includegraphics[scale=0.7]{tabla_hash.png}
+\end{center}
+\includegraphics[scale=0.4]{grafico_hash.png}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Conclusiones                                                              %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Indice Simple vs Indice Hash}
+
+En el caso de shards utilizando indice hash se puede ver que la distribuci\'on es
+casi ideal. A medida que se van agregando documento, van creciendo la cantidad de documentos en
+cada shard pero siempre de forma uniforme. 
+
+Mientras que en el caso de shards utilizando
+indices simples se puede ver que luego de la primera corrida casi el 100 \% de la informaci\'on esta
+en el shard numero 1, puede que \'esto se deba  a que la cantidad de entradas en es muy baja.
+Luego se empiezan a utilizar los otros shard pero con una distribuci\'on no
+tan regular, creciendo cada shard de forma proporcional hasta que, a partir de las 400.000 entradas el shard 1 empieza a aumentar en mayor medida su contenido, manteniendoce as\'i hasta el final.
+
+En base a esta experimientaci\'on, parecer\'ia que es mas seguro confiar en los \'indices de tipo hash, ya que distribuyen de forma casi ideal el contenido de la colecci\'on sobre los distintos shards. Sin embargo, el set de datos no es tan rico como para realizar muchas pruebas, queda pendiente para un futuro explorar \'esta t\'ecnica de particionado con m\'as datos y probar con \'indices compuesto, y con un conjunto de consultas establecidas, para analizar la performance de \'estas.
+
+\section{Posibles escenarios de Sharding}
+
+\begin{itemize}
+\item Un posible escenario seria uno en el cual tenemos una base de datos muy
+  grande y con una distribucion uniforme de datos de todo el mundo. Para eso se
+  podria definir un atributo continente, lo cual nos permitiria dividir la base
+  en diversos shards (uno en cada continente) para poder trabajar con una menor
+  cantidad de datos. Esto traeria la ventaja de que ante la caida de un nodo de
+  un continente no se perderian los datos de todo el mundo y solo habria que
+  recuperar ese continente determinado. Esta escenario no seria recomendado en
+  caso de tener muchos datos sobre un continente determinado, ya que estariamos
+  sobrecargando ese nodo en particular.
+
+
+\item Otro posible escenario seria uno en el cual tengamos una base de datos
+  muy grande sobre personas con distribucion uniforme sobre sus apellidos,(es
+  decir sobre las letras con las que comienza cada apellido). En este caso podriamos
+  crear una letra como atributo y asi particionar en shards nuestra base,
+  ubicando en cada servidor las personas cuyos apellidos comienzan con
+  determinada letra. Esto trae la ventaja de que trabajermos en cada servidor
+  con una menor cantidad de personas, en particular con las personas cuyo
+  apellido comienza con la letra del shard correspondiente. Esto nuevamente es
+  posible en el escenario en el cual tengamos una distribucion uniforme sobre la
+  primer letra de cada apellido, pues de lo contrario estariamos sobrecargando
+  ese nodo.
+
+\item Un tercer escenario posible en cual usar un atributo para sharding podria
+  ser uno en el cual tengamos una base de datos sobre personas en un hospital y
+  decidamos definir un atributo que sea el factor sanguineo. Esto permitira
+  dividir nuestra base de datos en shards, en el cual cada nodo tendra un
+  factor sanguineo en particular. Esto agilizara la consulta a la hora de
+  resolver una emergencia medica, ya que a la hora de resolver una consulta
+  solo debera buscarse en ese nodo particular y no en toda la base, por ejemplo
+  si se quisieran buscar donantes de sangre para un factor en particular.
+ 
+\end{itemize}
+
+
+\section{Caracteristicas atributos en Sharding}
+
+El objetivo es elegir una clave que nos permita que:
+
+\begin{itemize}
+\item Todos los inserts, updates y deletes deber\'ian estar distribuidos uniformemente sobre los shards.
+\item Todas las consultas deber\'ian ser distribuidas de forma uniforme sobre los shards.
+\item  Todas las operaciones deber\'ian ejecutarse s\'olo sobre un shard, es decir, no se deber\'ia hacer un delete sobre un shard que no contiene al dato.
+\item  Una consulta no deber\'ia hacerse sobre un shard que no tiene los datos que est\'an siendo buscados.
+\end{itemize}
+
+Teniendo en cuenta \'esto, un atributo usado para sharding deber\'ia:
+
+\begin{itemize}
+\item (Cardinality) Poder ser subdividido en rangos, para poder tener varios chunks dentro de cada shard
+\item (Write Distribution) Como describimos m\'as arriba, se desea distribuir las escrituras de forma uniforme. Para \'esto una clave computada con algun nivel de aleatoriedad (MD5 or SHA1).
+\item (Read Distribution) Para que las consultas est\'en distribuidas de forma uniforme, antes que nada hay que saber qu\'e tipo de consultas la bd va a manejar, con lo cual no se puede saber de forma general la forma de la clave para asegurar \'esto. Pero una opci\'on que podr\'ia funcionar en muchos casos es tener una clave compuesta por alg\'un campo de alta granularidad (por ejemplo un id, o un hash) junto con alg\'un atributo que sea usado en la consulta, por ejemplo, si busco datos por un a\~no, el a\~no podr\'ia formar parte de la clave.
+\item (Read Targeting) Como dijimos anteriormente, nos gustar\'ia que una consulta se ejecute s\'olo sobre un shard. Para \'esto es neesario que la clave de sharding est\'e presente en la consulta, con lo cual, uno deber\'ia elegir una clave que est\'e presente en la mayor\'ia de las consultas que se necesiten responder r\'apido.
+\item (Read Locality) Este \'item aplica a las consultas por rangos, como en Read Targeting, nos gustar\'ia que la consulta se ejecute s\'olo sobre un shard. Para \'esto lo que se suele hacer es crear una clave compuesta que tenga, por ejemplo, un id y una fecha, si se busca por rango de fechas. 
+\end{itemize}
+
+\end{document}
